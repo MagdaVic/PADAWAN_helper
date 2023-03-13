@@ -323,14 +323,14 @@ def add_name_phone(output_list, address_book: AddressBook):
         try:
             record.add_phones(Phone(phone))
             print(address_book)
-            print(f'New phone {phone} of {name} is added')
+            print(f'New phone {phone} of {name.capitalize()} is added')
         except PhoneError:
             print("Phone number must consist only from numbers and have format: +380 XX XXX XX XX, +380-XX-XXX-XX-XX, +380.XX.XXX.XX.XX or without '+38'")
     else:
         try:
             address_book.add_record(Record(name=Name(name), phone=Phone(phone)))
             print(address_book)
-            print(f'New contacts (name: {name}, phone: {phone}) are added')
+            print(f'New contacts (name: {name.capitalize()}, phone: {phone}) are added')
         except PhoneError:
             print("Phone number must consist only from numbers and have format: +380 XX XXX XX XX, +380-XX-XXX-XX-XX, +380.XX.XXX.XX.XX or without '+38'")
 
@@ -343,14 +343,14 @@ def add_name_birthday(output_list, address_book: AddressBook):
         try:
             record.add_birthday(Birthday(birthday))
             print(address_book)
-            print(f'Birthday of {name} is added')
+            print(f'Birthday of {name.capitalize()} is added')
         except BirthdayError:
             print("Birthday must have format 'DD.MM.YYYY' and consist only from numbers")
     else:
         try:
             address_book.add_record(Record(name=Name(name), birthday=Birthday(birthday)))
             print(address_book)
-            print(f'New contacts (name: {name}, birthday: {birthday}) are added')
+            print(f'New contacts (name: {name.capitalize()}, birthday: {birthday}) are added')
         except BirthdayError:
             print("Birthday must have format 'DD.MM.YYYY' and consist only from numbers")
 
@@ -362,11 +362,11 @@ def add_name_address(output_list, address_book: AddressBook):
     if record:
         record.add_address(Address(address))
         print(address_book)
-        print(f'Address of {name} is added')
+        print(f'Address of {name.capitalize()} is added')
     else:
         address_book.add_record(Record(name=Name(name), address=Address(address)))
         print(address_book)
-        print(f'New contacts (name: {name}, address: {address}) are added')
+        print(f'New contacts (name: {name.capitalize()}, address: {address}) are added')
 
 
 @input_error_name_email
@@ -377,14 +377,14 @@ def add_name_email (output_list, address_book: AddressBook):
         try:
             record.add_email(Email(email))
             print(address_book)
-            print(f'Email of {name} is added')
+            print(f'Email of {name.capitalize()} is added')
         except EmailError:
             print("Email must have format (string1)@(string2).(2+characters)")
     else:
         try:
             address_book.add_record(Record(name=Name(name), email=Email(email)))
             print(address_book)
-            print(f'New contacts (name: {name}, email: {email}) are added')
+            print(f'New contacts (name: {name.capitalize()}, email: {email}) are added')
         except EmailError:
             print("Email must have format (string1)@(string2).(2+characters)")
 
@@ -406,7 +406,7 @@ def change_phone(output_list, address_book: AddressBook):
         try:
             record.change_phones(phone, Phone(phone_new))
             print(address_book)
-            print(f'Phone {phone} of {name} is changed. New phone is {phone_new} ')
+            print(f'Phone {phone} of {name.capitalize()} is changed. New phone is {phone_new} ')
         except PhoneError:
             print("Phone number must consist only from numbers and have format: +380 XX XXX XX XX, +380-XX-XXX-XX-XX, +380.XX.XXX.XX.XX or without '+38'")
 
@@ -418,7 +418,7 @@ def remove_phone(output_list, address_book: AddressBook):
     if record:
         record.remove_phones(phone)
         print(address_book)
-        print(f'Phone {phone} of {name} is removed')
+        print(f'Phone {phone} of {name.capitalize()} is removed')
 
 
 def find_name_phone(output_list, address_book: AddressBook):
@@ -465,7 +465,7 @@ def main():
         for i in COMMANDS.keys():
             if commands_string.lower().startswith(i):
                 command = commands_string[:len(i)].lower()
-                command_parametres_list = commands_string[len(i)+1:].split()
+                command_parametres_list = commands_string[len(i)+1:].capitalize().split()
                 COMMANDS[command](command_parametres_list, address_book)
                 break
 
