@@ -358,12 +358,16 @@ def add_name_birthday(output_list, address_book: AddressBook):
     name, birthday, *other = output_list
     record = address_book.get(name)
     if record:
-        try:
-            record.add_birthday(Birthday(birthday))
-            print(address_book)
-            print(f'Birthday of {name} is added')
-        except BirthdayError:
-            print("Birthday must have format 'DD.MM.YYYY' and consist only from numbers")
+        if record.birthday is None:
+            try:
+                record.add_birthday(Birthday(birthday))
+                print(address_book)
+                print(f'Birthday of {name} is added')
+            except BirthdayError:
+                print("Birthday must have format 'DD.MM.YYYY' and consist only from numbers")
+        else:
+            print("Choose command 'change birthday'")
+    
     else:
         try:
             address_book.add_record(Record(name=Name(name), birthday=Birthday(birthday)))
@@ -378,9 +382,12 @@ def add_name_address(output_list, address_book: AddressBook):
     address=" ".join(output_list[1:])
     record = address_book.get(name)
     if record:
-        record.add_address(Address(address))
-        print(address_book)
-        print(f'Address of {name} is added')
+        if record.address is None:
+            record.add_address(Address(address))
+            print(address_book)
+            print(f'Address of {name} is added')
+        else:
+            print("Choose command 'change address'")
     else:
         address_book.add_record(Record(name=Name(name), address=Address(address)))
         print(address_book)
@@ -429,12 +436,15 @@ def add_name_email (output_list, address_book: AddressBook):
     name, email, *other = output_list
     record = address_book.get(name)
     if record:
-        try:
-            record.add_email(Email(email))
-            print(address_book)
-            print(f'Email of {name} is added')
-        except EmailError:
-            print("Email must have format (string1)@(string2).(2+characters)")
+        if record.email is None:
+            try:
+                record.add_email(Email(email))
+                print(address_book)
+                print(f'Email of {name} is added')
+            except EmailError:
+                print("Email must have format (string1)@(string2).(2+characters)")
+        else:
+            print("Choose command 'change email'")
     else:
         try:
             address_book.add_record(Record(name=Name(name), email=Email(email)))
