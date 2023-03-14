@@ -126,6 +126,24 @@ class Record:
             if ele.value == phone:
                 self.phones[count] = phone_new
                 break
+    
+    def change_email(self, email, email_new: Email):
+        for count, ele in enumerate(self.phones):
+            if ele.value == email:
+                self.phones[count] = email_new
+                break
+
+    def change_address(self, address, address_new: Address):
+        for count, ele in enumerate(self.address):
+            if ele.value == address:
+                self.phones[count] = address_new
+                break
+
+    def change_birthday(self, birthday, birthday_new: Birthday):
+        for count, ele in enumerate(self.birthday):
+            if ele.value == birthday:
+                self.phones[count] = birthday_new
+                break
 
     def remove_phones(self, phone):
         for count, ele in enumerate(self.phones):
@@ -368,6 +386,43 @@ def add_name_address(output_list, address_book: AddressBook):
         print(address_book)
         print(f'New contacts (name: {name}, address: {address}) are added')
 
+#5
+@input_error_name_address
+def change_address(output_list, address_book: AddressBook):
+    name=output_list[0]
+    address=" ".join(output_list[1:])
+    record = address_book.get(name)
+    if record:
+        record.add_address(Address(address))
+        print(address_book)
+        print(f'Address of {name} is changed')
+
+
+@input_error_name_email
+def change_email(output_list, address_book: AddressBook):
+    name, email, *other = output_list
+    record = address_book.get(name)
+    if record:
+        try:
+            record.add_email(Email(email))
+            print(address_book)
+            print(f'Email of {name} is changed')
+        except EmailError:
+            print("Email must have format (string1)@(string2).(2+characters)")
+
+
+@input_error_name_birthday
+def change_birthday(output_list, address_book: AddressBook):
+    name, birthday, *other = output_list
+    record = address_book.get(name)
+    if record:
+        try:
+            record.add_birthday(Birthday(birthday))
+            print(address_book)
+            print(f'Birthday of {name} is changed')
+        except BirthdayError:
+            print("Birthday must have format 'DD.MM.YYYY' and consist only from numbers")
+
 
 @input_error_name_email
 def add_name_email (output_list, address_book: AddressBook):
@@ -387,6 +442,7 @@ def add_name_email (output_list, address_book: AddressBook):
             print(f'New contacts (name: {name}, email: {email}) are added')
         except EmailError:
             print("Email must have format (string1)@(string2).(2+characters)")
+
 
 @input_error_days_before_birthday
 def birthday_in_days(output_list, address_book: AddressBook):
@@ -457,6 +513,7 @@ def main():
     address_book = AddressBook()
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address,'change phone': change_phone,
+                'change address': change_address, 'change email': change_email, 'change birthday': change_birthday,
                 'remove phone': remove_phone, 'show all': show_all, 'find': find_name_phone, 'good bye': exit_from_chat, 'close': exit_from_chat, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
     while True:
         command_completer = WordCompleter(COMMANDS.keys(),ignore_case=True)
