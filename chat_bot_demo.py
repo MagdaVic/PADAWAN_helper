@@ -6,6 +6,9 @@ from json import dump, load, JSONEncoder
 # import pickle
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
+from sort import list_all_files_in_rootdir, create_new_folders_in_rootdir,move_and_normalize_and_unarchieve_files_into_correct_folders,normalize_all_files_and_folders_in_archieve,remove_all_unnecessary_folders,print_out_in_console
+import os
+import shutil
 
 
 class Field:
@@ -438,6 +441,36 @@ def show_all(output_list, address_book: AddressBook):
 def exit_from_chat(output_list, address_book: AddressBook):
     sys.exit('Good bye!')
 
+def sort(output_list, address_book: AddressBook):
+    dict_extentions = {'archives': ['ZIP', 'GZ', 'TAR'], 'video': ['AVI', 'MP4', 'MOV', 'MKV'], 'audio': ['MP3', 'OGG', 'WAV', 'AMR'],
+                       'documents': ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'], 'images': ['JPEG', 'PNG', 'JPG', 'SVG']}
+
+    dict_fact_files = {'archives': [], 'video': [], 'audio': [],
+                       'documents': [], 'images': [], 'uknown_extension': []}
+
+    dict_known_unknown_extentions = {
+        'known extensions': set(), 'unknown extensions': set()}
+
+    # try:
+    #     rootdir = output_list
+    # except IndexError:
+    #     sys.exit('Write path')
+    # if not os.path.exists(rootdir):
+    #     sys.exit('Uknown directory, write correct directory')
+
+    rootdir, *other = output_list
+    print(output_list)
+    # rootdir = 'D:\GitHub\Project-Chat-bot\Мотлох'
+    lst_all_files = []
+    lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
+    create_new_folders_in_rootdir(rootdir, dict_extentions)
+    move_and_normalize_and_unarchieve_files_into_correct_folders(
+        rootdir, dict_extentions, lst_all_files, dict_fact_files)
+    normalize_all_files_and_folders_in_archieve(
+        os.path.join(rootdir, 'archives'))
+    remove_all_unnecessary_folders(rootdir,dict_extentions)
+    print_out_in_console(dict_fact_files, dict_known_unknown_extentions)
+
 
 @input_error_filename
 def write_contacts_to_file(output_list, address_book: AddressBook):
@@ -457,7 +490,7 @@ def main():
     address_book = AddressBook()
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address,'change phone': change_phone,
-                'remove phone': remove_phone, 'show all': show_all, 'find': find_name_phone, 'good bye': exit_from_chat, 'close': exit_from_chat, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
+                'remove phone': remove_phone, 'show all': show_all, 'find': find_name_phone, 'good bye': exit_from_chat, 'close': exit_from_chat, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days, 'sort':sort}
     while True:
         command_completer = WordCompleter(COMMANDS.keys(),ignore_case=True)
         commands_string = prompt(
@@ -471,4 +504,6 @@ def main():
 
 
 if __name__ == '__main__':
+
+
     main()
