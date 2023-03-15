@@ -313,6 +313,19 @@ def input_error_name_phone_phone_new(func):
             return func(output_list, address_book)
     return wrapper
 
+def validate_correct_path(func):
+    def wrapper(output_list, address_book):
+        try:
+            rootdir, *other = output_list
+        except ValueError:
+            print('Write path')
+        else:
+            rootdir = " ".join(output_list[:])
+            if not os.path.exists(rootdir):
+                print('Uknown directory, write correct path and directory')
+            else:
+                return func(output_list, address_book)
+    return wrapper
 
 def hello(output_list, address_book: AddressBook):
     print("How can I help you?")
@@ -441,6 +454,8 @@ def show_all(output_list, address_book: AddressBook):
 def exit_from_chat(output_list, address_book: AddressBook):
     sys.exit('Good bye!')
 
+
+@validate_correct_path
 def sort(output_list, address_book: AddressBook):
     dict_extentions = {'archives': ['ZIP', 'GZ', 'TAR'], 'video': ['AVI', 'MP4', 'MOV', 'MKV'], 'audio': ['MP3', 'OGG', 'WAV', 'AMR'],
                        'documents': ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'], 'images': ['JPEG', 'PNG', 'JPG', 'SVG']}
@@ -450,17 +465,7 @@ def sort(output_list, address_book: AddressBook):
 
     dict_known_unknown_extentions = {
         'known extensions': set(), 'unknown extensions': set()}
-
-    # try:
-    #     rootdir = output_list
-    # except IndexError:
-    #     sys.exit('Write path')
-    # if not os.path.exists(rootdir):
-    #     sys.exit('Uknown directory, write correct directory')
-
-    rootdir, *other = output_list
-    print(output_list)
-    # rootdir = 'D:\GitHub\Project-Chat-bot\Мотлох'
+    rootdir=" ".join(output_list[:])
     lst_all_files = []
     lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
     create_new_folders_in_rootdir(rootdir, dict_extentions)
@@ -505,6 +510,4 @@ def main():
 
 
 if __name__ == '__main__':
-
-
     main()
