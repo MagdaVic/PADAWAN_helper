@@ -478,6 +478,7 @@ def write_contacts_to_file(output_list, address_book: AddressBook):
     address_book.save_to_file(filename)
     print('File is saved')
 
+    
 
 @input_error_filename
 def read_contacts_from_file(output_list, address_book: AddressBook):
