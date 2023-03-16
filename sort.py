@@ -95,16 +95,6 @@ def remove_all_unnecessary_folders(rootdir,dict_extentions):
         if it.is_dir() and it.name not in dict_extentions.keys() and it.name != 'uknown_extension':
             shutil.rmtree(it, ignore_errors=True)
 
-
-def validate_correct_path():
-    try:
-        rootdir = sys.argv[1]
-    except IndexError:
-        sys.exit('Write path')
-    if not os.path.exists(rootdir):
-        sys.exit('Uknown directory, write correct directory')
-
-
 def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
     for key, value in dict_fact_files.items():
         print(f"files in cat '{key}': {', '.join(value)}")
@@ -117,10 +107,29 @@ def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
     for key, value in dict_known_unknown_extentions.items():
         print(f"{key}: {', '.join(value)}")
 
+def validate_correct_path():
+        rootdir = None
+        while True:
+            rootdir = input('Enter correct path of directory that you want to sort:').strip()
+            if not os.path.exists(rootdir):
+                if rootdir in ['good bye','close','exit']:
+                    sys.exit('Good bye!')
+                print("Path doesn't exist. Write correct path and directory")
+                print("If you want to exit - enter 'exit'")
+            else:
+                break
+        return rootdir
 
 def main():
-    validate_correct_path()
-    rootdir = sys.argv[1]
+    dict_extentions = {'archives': ['ZIP', 'GZ', 'TAR'], 'video': ['AVI', 'MP4', 'MOV', 'MKV'], 'audio': ['MP3', 'OGG', 'WAV', 'AMR'],
+                       'documents': ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'], 'images': ['JPEG', 'PNG', 'JPG', 'SVG']}
+
+    dict_fact_files = {'archives': [], 'video': [], 'audio': [],
+                       'documents': [], 'images': [], 'uknown_extension': []}
+
+    dict_known_unknown_extentions = {
+        'known extensions': set(), 'unknown extensions': set()}
+    rootdir=validate_correct_path()
     lst_all_files = []
     lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
     create_new_folders_in_rootdir(rootdir, dict_extentions)
@@ -131,14 +140,5 @@ def main():
     remove_all_unnecessary_folders(rootdir,dict_extentions)
     print_out_in_console(dict_fact_files, dict_known_unknown_extentions)
 
-
 if __name__ == '__main__':
-    dict_extentions = {'archives': ['ZIP', 'GZ', 'TAR'], 'video': ['AVI', 'MP4', 'MOV', 'MKV'], 'audio': ['MP3', 'OGG', 'WAV', 'AMR'],
-                       'documents': ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'], 'images': ['JPEG', 'PNG', 'JPG', 'SVG']}
-
-    dict_fact_files = {'archives': [], 'video': [], 'audio': [],
-                       'documents': [], 'images': [], 'uknown_extension': []}
-
-    dict_known_unknown_extentions = {
-        'known extensions': set(), 'unknown extensions': set()}
     main()
