@@ -491,6 +491,15 @@ def remove_phone(output_list, address_book: AddressBook):
         print(f'Phone {phone} of {name} is removed')
 
 
+def remove_contact(output_list, address_book: AddressBook):
+    name, *extra = output_list
+    record = address_book.get(name)
+    if record:
+        address_book.pop(name)
+        print(address_book)
+        print(f'Contact: {name} has been removed')
+    
+
 def find_name_phone(output_list, address_book: AddressBook):
     value, *other = output_list
     for k, v in address_book.items():
@@ -530,7 +539,7 @@ def main():
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address,'change phone': change_phone,
 'change address': change_address, 'change email': change_email, 'change birthday': change_birthday,
-                'remove phone': remove_phone, 'show all': show_all, 'find': find_name_phone, 'good bye': exit_from_chat, 'close': exit_from_chat, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
+                'remove phone': remove_phone, 'remove contact': remove_contact, 'show all': show_all, 'find': find_name_phone, 'good bye': exit_from_chat, 'close': exit_from_chat, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
 
     while True:
         command_completer = WordCompleter(COMMANDS.keys(),ignore_case=True)
