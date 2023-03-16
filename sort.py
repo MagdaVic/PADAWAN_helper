@@ -95,6 +95,9 @@ def remove_all_unnecessary_folders(rootdir,dict_extentions):
         if it.is_dir() and it.name not in dict_extentions.keys() and it.name != 'uknown_extension':
             shutil.rmtree(it, ignore_errors=True)
 
+
+
+
 def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
     for key, value in dict_fact_files.items():
         print(f"files in cat '{key}': {', '.join(value)}")
@@ -106,14 +109,13 @@ def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
                 i[(i).rfind('.'):].lower() for i in value)
     for key, value in dict_known_unknown_extentions.items():
         print(f"{key}: {', '.join(value)}")
+    
 
 def validate_correct_path():
         rootdir = None
         while True:
             rootdir = input('Enter correct path of directory that you want to sort:').strip()
-            if not os.path.exists(rootdir):
-                if rootdir in ['good bye','close','exit']:
-                    sys.exit('Good bye!')
+            if not os.path.exists(rootdir) and rootdir.lower() !='exit':
                 print("Path doesn't exist. Write correct path and directory")
                 print("If you want to exit - enter 'exit'")
             else:
@@ -129,16 +131,23 @@ def main():
 
     dict_known_unknown_extentions = {
         'known extensions': set(), 'unknown extensions': set()}
-    rootdir=validate_correct_path()
-    lst_all_files = []
-    lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
-    create_new_folders_in_rootdir(rootdir, dict_extentions)
-    move_and_normalize_and_unarchieve_files_into_correct_folders(
-        rootdir, dict_extentions, lst_all_files, dict_fact_files)
-    normalize_all_files_and_folders_in_archieve(
-        os.path.join(rootdir, 'archives'))
-    remove_all_unnecessary_folders(rootdir,dict_extentions)
-    print_out_in_console(dict_fact_files, dict_known_unknown_extentions)
-
+    
+    
+    while True:
+        rootdir=validate_correct_path()
+        if rootdir.lower() =='exit':
+            print('Exit from sort')
+            break
+        lst_all_files = []
+        lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
+        create_new_folders_in_rootdir(rootdir, dict_extentions)
+        move_and_normalize_and_unarchieve_files_into_correct_folders(
+            rootdir, dict_extentions, lst_all_files, dict_fact_files)
+        normalize_all_files_and_folders_in_archieve(
+            os.path.join(rootdir, 'archives'))
+        remove_all_unnecessary_folders(rootdir,dict_extentions)
+        print_out_in_console(dict_fact_files, dict_known_unknown_extentions)
+       
+    
 if __name__ == '__main__':
     main()
