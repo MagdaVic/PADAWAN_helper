@@ -1,5 +1,6 @@
 from collections import UserList
 from datetime import datetime
+import pickle
 
 
 class NoteBook(UserList):
@@ -64,6 +65,19 @@ class NoteBook(UserList):
             else:
                 print("  > Note with this name was not found.")
 
+
+    def save(self):
+        with open("nbsave.bin", "wb") as fl:
+            print("  > Information saved.")
+            pickle.dump(self.data, fl)
+
+    def load(self):
+        try:
+            with open("nbsave.bin", "rb") as fl:
+                self.data = pickle.load(fl)
+                print("  > Information is loaded.")
+        except FileNotFoundError:
+            print("  > Save file not found.")
 
 
 ######################################
@@ -140,6 +154,7 @@ class Record:
 class Bot:
     def __init__(self):
         self.book = NoteBook()
+        self.book.load()
 
     def handle(self, comand):
         if comand == 'add':
@@ -162,6 +177,10 @@ class Bot:
         elif comand == "edit":
             name = input("    > Enter the name of the note you want to edit: ")
             return self.book.edit(name)
+        elif comand == "save":
+            return self.book.save()
+        elif comand == "load":
+            return self.book.load()
         else:
             print(f"  > I don't know such a command(")
 
@@ -170,12 +189,19 @@ class Bot:
 ######################################
             
 def main():
-    print("    > Hello. I am a notebook assistant. Shall we add a note?")
     bot = Bot()
+    print("  > Hello. I am a notebook assistant. Shall we add a note?")
     while True:
-        comand = (input("    > Your command: ")).lower()
+        comand = (input("    > Your command: ")).lower().strip()
         if comand in ["exit", "close"]:
-            return
+            print("   > Save data?")
+            comand = (input("    > Yes/no: ")).lower().strip()
+            if comand == "yes":
+                print("  > Bye!")
+                return bot.book.save()
+            else:
+                print("  > Bye!")
+                return
         else:
             bot.handle(comand)
 
