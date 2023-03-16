@@ -96,13 +96,13 @@ def remove_all_unnecessary_folders(rootdir,dict_extentions):
             shutil.rmtree(it, ignore_errors=True)
 
 
-def validate_correct_path():
-    try:
-        rootdir = sys.argv[1]
-    except IndexError:
-        sys.exit('Write path')
-    if not os.path.exists(rootdir):
-        sys.exit('Uknown directory, write correct directory')
+# def validate_correct_path():
+#     try:
+#         rootdir = sys.argv[1]
+#     except IndexError:
+#         sys.exit('Write path')
+#     if not os.path.exists(rootdir):
+#         sys.exit('Uknown directory, write correct directory')
 
 
 def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
@@ -117,10 +117,18 @@ def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
     for key, value in dict_known_unknown_extentions.items():
         print(f"{key}: {', '.join(value)}")
 
+def validate_correct_path():
+        rootdir = None
+        while True:
+            rootdir = input('Enter correct path of directory that you want to sort:').strip()
+            if not os.path.exists(rootdir):
+                print("Path doesn't exist. Write correct path and directory")
+            else:
+                break
+        return rootdir
 
 def main():
-    validate_correct_path()
-    rootdir = sys.argv[1]
+    rootdir=validate_correct_path()
     lst_all_files = []
     lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
     create_new_folders_in_rootdir(rootdir, dict_extentions)
@@ -130,6 +138,7 @@ def main():
         os.path.join(rootdir, 'archives'))
     remove_all_unnecessary_folders(rootdir,dict_extentions)
     print_out_in_console(dict_fact_files, dict_known_unknown_extentions)
+
 
 
 if __name__ == '__main__':
