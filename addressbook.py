@@ -6,9 +6,7 @@ from json import dump, load, JSONEncoder
 # import pickle
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from sort import list_all_files_in_rootdir, create_new_folders_in_rootdir,move_and_normalize_and_unarchieve_files_into_correct_folders,normalize_all_files_and_folders_in_archieve,remove_all_unnecessary_folders,print_out_in_console
-import os
-import shutil
+
 
 
 class Field:
