@@ -2,8 +2,8 @@ from collections import UserDict
 import re
 from datetime import datetime
 import sys
-from json import dump, load, JSONEncoder
-# import pickle
+#from json import dump, load, JSONEncoder
+import pickle
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
@@ -215,18 +215,18 @@ class AddressBook(UserDict):
                 break
 
     def save_to_file(self, filename):
-        with open(filename, 'w') as fh:
-            dump(self, fh, ensure_ascii=False, cls=MyEncoder)
+        with open(filename, 'wb') as fh:
+            pickle.dump(self, fh)
 
     def read_from_file(self, filename):
-        with open(filename, 'r') as fh:
-            self_unpack = load(fh)
+        with open(filename, 'rb') as fh:
+            self_unpack = pickle.load(fh)
             return self_unpack
 
 
-class MyEncoder(JSONEncoder):
-    def default(self, obj):
-        return obj.__dict__
+#class MyEncoder(JSONEncoder):
+#   def default(self, obj):
+#        return obj.__dict__
 
 
 class PhoneError(Exception):
@@ -463,7 +463,9 @@ def birthday_in_days(output_list, address_book: AddressBook):
     for k, v in address_book.items():
       record = address_book.get(k)
       if days_in==record.days_to_birthday():
+          print("Don't forget to congratulate with birthday:")
           print(record)  
+          
 
 
 @input_error_name_phone_phone_new
@@ -512,8 +514,8 @@ def show_all(output_list, address_book: AddressBook):
     else:
         address_book.show_all_limit()
 
-def exit_from_chat(output_list, address_book: AddressBook):
-    sys.exit('Good bye!')
+def exit_from_chat():
+    print('Exit from AddressBook')
 
 
 
@@ -537,7 +539,7 @@ def main():
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address,'change phone': change_phone,
 'change address': change_address, 'change email': change_email, 'change birthday': change_birthday,
-                'remove phone': remove_phone, 'remove contact': remove_contact, 'show all': show_all, 'find': find_name_phone, 'good bye': exit_from_chat, 'close': exit_from_chat, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
+                'remove phone': remove_phone, 'remove contact': remove_contact, 'show all': show_all, 'find': find_name_phone, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
 
     while True:
         command_completer = WordCompleter(COMMANDS.keys(),ignore_case=True)
@@ -546,6 +548,9 @@ def main():
         for i in COMMANDS.keys():
             if commands_string.lower().startswith(i):
                 command = commands_string[:len(i)].lower()
+                if command == 'exit':
+                    exit_from_chat()
+                    break
                 command_parametres_list = commands_string[len(i)+1:].capitalize().split()
                 COMMANDS[command](command_parametres_list, address_book)
                 break
