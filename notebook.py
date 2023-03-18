@@ -1,6 +1,9 @@
 from collections import UserList
 from datetime import datetime
 import pickle
+from colorama import init
+from colorama import Fore, Back
+init()
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
@@ -24,25 +27,26 @@ class NoteBook(UserList):
         while value > 0:
             try:
                 if self.data == []:
-                    print("  > Your notebook is empty(")
+                    print("    > Your notebook is empty(")
                 print(next(gen))
                 value -= 1
             except StopIteration:
                 return ""
-        print("  > Thats all!") 
+        print("    > Thats all!") 
 
     def add(self, rec):
         self.data.append(rec)
-        print(f"  > You have added a note: {rec.name}")
-        print(rec)
+        print(f"    > You have added a note: {rec.name}")
+        print(f"    > {rec}")
+
 
     def remove(self, name):
         for it in self.data:
             if str(it.name) == name:
-                print(f"  > You have deleted the note {name}")
+                print(f"    > You have deleted the note {name}")
                 self.data.remove(it)
             else:
-                print("  > Note with this name was not found.")
+                print(Fore.WHITE + Back.RED +"  > Note with this name was not found.")
 
     def edit(self, name):
         for it in self.data:
@@ -66,23 +70,23 @@ class NoteBook(UserList):
                         print(f"  > {it}")
                         break
                     else:
-                        print("  > I don't know what it is(")
+                        print("    > I don't know what it is(")
             else:
-                print("  > Note with this name was not found.")
+                print(Fore.WHITE + Back.RED +"  > Note with this name was not found.")
 
 
     def save(self):
         with open("nbsave.bin", "wb") as fl:
-            print("  > Information saved.")
+            print("    > Information saved.")
             pickle.dump(self.data, fl)
 
     def load(self):
         try:
             with open("nbsave.bin", "rb") as fl:
                 self.data = pickle.load(fl)
-                print("  > Information is loaded.")
+                print("    > Information is loaded.")
         except FileNotFoundError:
-            print("  > Save file not found.")
+            print(Fore.WHITE + Back.RED +"  > Save file not found.")
 
 
 ######################################
@@ -92,9 +96,9 @@ class NoteName:
         while True:
             self.inp = input("    > Name of the note: ")
             if len(self.inp.replace(" ", "")) > 20:
-                print("  > The title is too long......... Must be less than 20.")
+                print(Fore.WHITE + Back.RED +"  > The title is too long......... Must be less than 20.")
             elif self.inp == "":
-                print("  > Please enter the name of the note.")
+                print("    > Please enter the name of the note.")
             else:
                 self.value = self.inp.title()
                 break
@@ -112,7 +116,7 @@ class Tag:
                 self.value = self.inp
                 break
             else:
-                print("  > Too long......... Must be less than 10.")
+                print(Fore.WHITE + Back.RED +"  > Too long......... Must be less than 10.")
 
     def __repr__(self):
         return f"#{' #'.join(self.value)}"
@@ -126,7 +130,7 @@ class Note:
                 self.value = self.inp
                 break
             else:
-                print("  > Too long......... Must be less than 500.")
+                print(Fore.WHITE + Back.RED +"  > Too long......... Must be less than 500.")
 
     def __repr__(self):
         return f"{self.value}"
@@ -189,7 +193,7 @@ class Bot:
         elif comand == "load":
             return self.book.load()
         else:
-            print(f"  > I don't know such a command(")
+            print(Fore.WHITE + Back.RED +f"  > I don't know such a command(")
 
 
 
@@ -198,18 +202,20 @@ class Bot:
 def main():
     bot = Bot()
     comm_list = WordCompleter(["add", "show", "remove", "edit", "save", "load", "exit"], ignore_case = True)
-    print("  > Hello. I am a notebook assistant. Shall we add a note?")
+    print("    > Hello. I am a notebook assistant. Shall we add a note?")
+
     while True:
         comand = prompt("    > Your command: ", completer = comm_list, complete_while_typing = True)
         if comand in ["exit", "close"]:
-            print("   > Save data?")
-            comm_list = WordCompleter(["yes", "no"], ignore_case = True)
-            comand = prompt("    > Y/n: ", completer = comm_list, complete_while_typing = True)
-            if comand in ["yes", "y"]:
-                print("  > Bye!")
+            print("    > Save data?")
+            comm_list = WordCompleter(["YES", "NO"], ignore_case = True)
+            comand = prompt("    >If YES press 'Y' and 'N' if NO: ", completer = comm_list, complete_while_typing = True)
+            if comand in ["YES", "Y"]:
+                print("    > Bye!")
+
                 return bot.book.save()
             else:
-                print("  > Bye!")
+                print("    > Bye!")
                 return
         else:
             bot.handle(comand)
