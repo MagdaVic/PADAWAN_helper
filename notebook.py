@@ -4,6 +4,8 @@ import pickle
 from colorama import init
 from colorama import Fore, Back
 init()
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
 
 
 class NoteBook(UserList):
@@ -12,8 +14,10 @@ class NoteBook(UserList):
 
     def generator(self):
         for it in self.data:
-            yield f"  > {it}"
+            yield it
 
+    def list_names(self):
+        return [str(it.name) for it in self.data]
     
     def iterator(self, value):
 
@@ -35,6 +39,7 @@ class NoteBook(UserList):
         print(f"    > You have added a note: {rec.name}")
         print(f"    > {rec}")
 
+
     def remove(self, name):
         for it in self.data:
             if str(it.name) == name:
@@ -47,7 +52,8 @@ class NoteBook(UserList):
         for it in self.data:
             if str(it.name) == name.title():  
                 while True:
-                    value = (input("    > Choose what to edit. Name/Tags/Note: ")).title()
+                    comm_list = WordCompleter(["Name", "Tags", "Note"], ignore_case = True)
+                    value = prompt("    > Choose what to edit. Name/Tags/Note: ", completer = comm_list, complete_while_typing = True)
                     if value == "Name":
                         it.name = NoteName()
                         it.time = TimeRec()
@@ -150,7 +156,7 @@ class Record:
         self.time = time
 
     def __repr__(self):
-        return f"{self.name}     {self.time}\n{self.tags}\n{self.note}\n"
+        return f"\n  > {self.name}     {self.time}\n{self.tags}\n{self.note}"
 
 ######################################
 
@@ -175,10 +181,12 @@ class Bot:
                 except ValueError:
                     print("    > Enter a number")
         elif comand == "remove":
-            name = (input("    > Enter the name of the note you want to delete: ")).title()
+            comm_list = WordCompleter(self.book.list_names(), ignore_case = True)
+            name = prompt("    > Enter the name of the note you want to delete: ", completer = comm_list, complete_while_typing = True)
             return self.book.remove(name)
         elif comand == "edit":
-            name = input("    > Enter the name of the note you want to edit: ")
+            comm_list = WordCompleter(self.book.list_names(), ignore_case = True)
+            name = prompt("    > Enter the name of the note you want to edit: ", completer = comm_list, complete_while_typing = True)
             return self.book.edit(name)
         elif comand == "save":
             return self.book.save()
@@ -193,14 +201,18 @@ class Bot:
             
 def main():
     bot = Bot()
+    comm_list = WordCompleter(["add", "show", "remove", "edit", "save", "load", "exit"], ignore_case = True)
     print("    > Hello. I am a notebook assistant. Shall we add a note?")
+
     while True:
-        comand = (input("    > Your command: ")).lower().strip()
+        comand = prompt("    > Your command: ", completer = comm_list, complete_while_typing = True)
         if comand in ["exit", "close"]:
             print("    > Save data?")
-            comand = (input("    > If YES press 'Y' and 'N' if NO: ")).lower().strip()
-            if comand == "y":
+            comm_list = WordCompleter(["YES", "NO"], ignore_case = True)
+            comand = prompt("    >If YES press 'Y' and 'N' if NO: ", completer = comm_list, complete_while_typing = True)
+            if comand in ["YES", "Y"]:
                 print("    > Bye!")
+
                 return bot.book.save()
             else:
                 print("    > Bye!")
