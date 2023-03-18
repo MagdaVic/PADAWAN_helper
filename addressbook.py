@@ -219,16 +219,16 @@ class AddressBook(UserDict):
                 break
 
     def save_to_file(self):
-        with open("absave.bin", "ab") as fl:
+        with open("absave.bin", "wb") as fl:
             print("    > Information saved.")
             pickle.dump(self.data, fl)
 
     def read_from_file(self):
         try:
             with open("absave.bin", "rb") as fl:
-                self_unpack = pickle.load(fl)
+                self.data = pickle.load(fl)
                 print("    > Information is loaded.")
-                return self_unpack
+            return self.data
         except FileNotFoundError:
             print(Fore.WHITE + Back.RED + "  > Save file not found.")
 
