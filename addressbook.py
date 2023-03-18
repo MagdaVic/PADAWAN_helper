@@ -119,7 +119,7 @@ class Record:
         self.email = email
 
     def __repr__(self) -> str:
-        return f'    > Name: {self.name}, Phones: {self.phones}, Address: {self.address}, Email: {self.email}, Birthday: {self.birthday}'
+        return f'Name: {self.name}, Phones: {self.phones}, Address: {self.address}, Email: {self.email}, Birthday: {self.birthday}'
 
     def add_phones(self, phone: Phone):
         if phone not in self.phones:
@@ -218,12 +218,12 @@ class AddressBook(UserDict):
             except StopIteration:
                 break
 
-    def save_to_file(self, filename):
-        with open("absave.bin", "wb") as fl:
+    def save_to_file(self):
+        with open("absave.bin", "ab") as fl:
             print("    > Information saved.")
             pickle.dump(self.data, fl)
 
-    def read_from_file(self, filename):
+    def read_from_file(self):
         try:
             with open("absave.bin", "rb") as fl:
                 self_unpack = pickle.load(fl)
@@ -550,26 +550,33 @@ def exit_from_chat():
     print('    > Exit from AddressBook')
 
 
-@input_error_filename
+# @input_error_filename
+# def write_contacts_to_file(output_list, address_book: AddressBook):
+#     filename, *other = output_list
+#     address_book.save_to_file(filename)
+#     print('    > File is saved')
+
 def write_contacts_to_file(output_list, address_book: AddressBook):
-    filename, *other = output_list
-    address_book.save_to_file(filename)
+    address_book.save_to_file()
     print('    > File is saved')
 
+# @input_error_filename
+# def read_contacts_from_file(output_list, address_book: AddressBook):
+#     filename, *other = output_list
+#     address_book.read_from_file(filename)
+#     print('    > File is read')
 
-@input_error_filename
+
 def read_contacts_from_file(output_list, address_book: AddressBook):
-    filename, *other = output_list
-    address_book.read_from_file(filename)
+    address_book.read_from_file()
     print('    > File is read')
-
 
 def main():
     address_book = AddressBook()
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address, 'change phone': change_phone,
                 'change address': change_address, 'change email': change_email, 'change birthday': change_birthday,
-                'remove phone': remove_phone, 'remove contact': remove_contact, 'show all': show_all, 'find': find_name_phone, 'exit': exit_from_chat, 'save to': write_contacts_to_file, 'read from ': read_contacts_from_file, 'birthday in days': birthday_in_days}
+                'remove phone': remove_phone, 'remove contact': remove_contact, 'show all': show_all, 'find': find_name_phone, 'exit': exit_from_chat, 'save': write_contacts_to_file, 'load': read_contacts_from_file, 'birthday in days': birthday_in_days}
 
     while True:
         command_completer = WordCompleter(COMMANDS.keys(), ignore_case=True)
@@ -577,11 +584,11 @@ def main():
             '    > Enter your command:', completer=command_completer, complete_while_typing=False).lstrip()
         if commands_string.lower().startswith('exit'):
             print("    > Save data?")
-            comand = (input("    > If YES press 'Y' and 'N' if NO: ")
-                      ).lower().strip()
-            if comand == "y":
+            comm_list = WordCompleter(["YES", "NO"], ignore_case = True)
+            comand = prompt("    >If YES press 'Y' and 'N' if NO: ", completer = comm_list, complete_while_typing = True)
+            if comand in ["YES", "Y"]:
                 print("    > Bye!")
-                return write_contacts_to_file()
+                return write_contacts_to_file(address_book,address_book)
             exit_from_chat()
             break
 

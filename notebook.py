@@ -76,7 +76,7 @@ class NoteBook(UserList):
 
 
     def save(self):
-        with open("nbsave.bin", "wb") as fl:
+        with open("nbsave.bin", "ab") as fl:
             print("    > Information saved.")
             pickle.dump(self.data, fl)
 
