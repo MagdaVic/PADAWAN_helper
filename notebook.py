@@ -209,7 +209,7 @@ def main():
         if comand in ["exit", "close"]:
             print("    > Save data?")
             comm_list = WordCompleter(["YES", "NO"], ignore_case = True)
-            comand = prompt("    >If YES press 'Y' and 'N' if NO: ", completer = comm_list, complete_while_typing = True)
+            comand = prompt("    > If YES press 'Y' and 'N' if NO: ", completer = comm_list, complete_while_typing = True)
             if comand in ["YES", "Y"]:
                 print("    > Bye!")
 
