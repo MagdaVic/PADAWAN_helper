@@ -17,13 +17,18 @@ class NoteBook(UserList):
             yield it
 
     def list_names(self):
-        return [str(it.name) for it in self.data]
+        return {str(it.name) for it in self.data}
+    
+    def list_tags(self):
+        list_tags = set()
+        for it in self.data:
+            for item in it.tags.value:
+                list_tags.add(item)
+        return list_tags  
     
     def iterator(self, value):
-
         value = value
         gen = self.generator()
-
         while value > 0:
             try:
                 if self.data == []:
@@ -42,18 +47,20 @@ class NoteBook(UserList):
 
     def remove(self, name):
         for it in self.data:
-            if str(it.name) == name:
-                print(f"    > You have deleted the note {name}")
+
+            if str(it.name) == name.title():
+                print(f"  > You have deleted the note {name}")
                 self.data.remove(it)
-            else:
-                print(Fore.WHITE + Back.RED +"  > Note with this name was not found.")
+                return
+        print(Fore.WHITE + Back.RED +"  > Note with this name was not found.")
+
 
     def edit(self, name):
         for it in self.data:
             if str(it.name) == name.title():  
                 while True:
                     comm_list = WordCompleter(["Name", "Tags", "Note"], ignore_case = True)
-                    value = prompt("    > Choose what to edit. Name/Tags/Note: ", completer = comm_list, complete_while_typing = True)
+                    value = prompt("    > Choose what to edit. Name/Tags/Note: ", completer = comm_list, complete_while_typing = True).title()
                     if value == "Name":
                         it.name = NoteName()
                         it.time = TimeRec()
@@ -70,9 +77,37 @@ class NoteBook(UserList):
                         print(f"  > {it}")
                         break
                     else:
-                        print("    > I don't know what it is(")
-            else:
-                print(Fore.WHITE + Back.RED +"  > Note with this name was not found.")
+
+                        print("  > I don't know what it is(")
+                        break
+        print(Fore.WHITE + Back.RED +"  > Note with this name was not found."))
+
+    def search(self, value):
+        if value == "Name":
+            comm_list = WordCompleter(self.list_names(), ignore_case = True)
+            name = prompt("    > Enter the name of the note: ", completer = comm_list, complete_while_typing = True)
+            for it in self.data:
+                if str(it.name) == name.title():
+                    print(it)
+            print("  > Thats all!")
+
+        elif value == "Tags":
+            comm_list = WordCompleter(self.list_tags(), ignore_case = True)
+            tag = prompt("    > Enter the tag of the note: ", completer = comm_list, complete_while_typing = True)
+            for it in self.data:
+                for item in it.tags.value:   
+                    if item == tag:
+                        print(it)
+            print("  > Thats all!")
+
+
+        elif value == "Note":
+            note = input("    > Enter the note: ")
+            for it in self.data:
+                if (it.note.value.find(note[1:]) > 0) or (it.note.value.find(note) > 0):
+                    print(it)
+            print("  > Thats all!")
+
 
 
     def save(self):
@@ -188,6 +223,10 @@ class Bot:
             comm_list = WordCompleter(self.book.list_names(), ignore_case = True)
             name = prompt("    > Enter the name of the note you want to edit: ", completer = comm_list, complete_while_typing = True)
             return self.book.edit(name)
+        elif comand == "search":
+            comm_list = WordCompleter(["Name", "Tags", "Note"], ignore_case = True)
+            value = prompt("    > Choose what to look for. Name/Tags/Note: ", completer = comm_list, complete_while_typing = True).title()
+            return self.book.search(value)
         elif comand == "save":
             return self.book.save()
         elif comand == "load":
@@ -199,13 +238,14 @@ class Bot:
 
 ######################################
             
-def main():
+def main(): 
     bot = Bot()
-    comm_list = WordCompleter(["add", "show", "remove", "edit", "save", "load", "exit"], ignore_case = True)
+
+    comm_list = WordCompleter(["add", "show", "remove", "edit", "search", "save", "load", "exit"], ignore_case = True)
     print("    > Hello. I am a notebook assistant. Shall we add a note?")
 
     while True:
-        comand = prompt("    > Your command: ", completer = comm_list, complete_while_typing = True)
+        comand = prompt("    > Your command: ", completer = comm_list, complete_while_typing = True).lower().strip()
         if comand in ["exit", "close"]:
             print("    > Save data?")
             comm_list = WordCompleter(["YES", "NO"], ignore_case = True)
@@ -224,7 +264,3 @@ def main():
     
 if __name__ == "__main__":
     main()
-    
-
-
-
