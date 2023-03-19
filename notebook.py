@@ -80,7 +80,7 @@ class NoteBook(UserList):
 
                         print("  > I don't know what it is(")
                         break
-        print(Fore.WHITE + Back.RED +"  > Note with this name was not found."))
+        print(Fore.WHITE + Back.RED +"  > Note with this name was not found.")
 
     def search(self, value):
         if value == "Name":
@@ -111,7 +111,7 @@ class NoteBook(UserList):
 
 
     def save(self):
-        with open("nbsave.bin", "ab") as fl:
+        with open("nbsave.bin", "wb") as fl:
             print("    > Information saved.")
             pickle.dump(self.data, fl)
 
@@ -120,6 +120,7 @@ class NoteBook(UserList):
             with open("nbsave.bin", "rb") as fl:
                 self.data = pickle.load(fl)
                 print("    > Information is loaded.")
+            return self.data
         except FileNotFoundError:
             print(Fore.WHITE + Back.RED +"  > Save file not found.")
 
