@@ -188,6 +188,8 @@ class Record:
 
 class AddressBook(UserDict):
 
+        
+
     def __repr__(self):
         return f'{self.data}'
 
@@ -573,6 +575,7 @@ def read_contacts_from_file(output_list, address_book: AddressBook):
 
 def main():
     address_book = AddressBook()
+    address_book.read_from_file()
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address, 'change phone': change_phone,
                 'change address': change_address, 'change email': change_email, 'change birthday': change_birthday,

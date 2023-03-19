@@ -120,7 +120,7 @@ class NoteBook(UserList):
             with open("nbsave.bin", "rb") as fl:
                 self.data = pickle.load(fl)
                 print("    > Information is loaded.")
-            return self.data
+           
         except FileNotFoundError:
             print(Fore.WHITE + Back.RED +"  > Save file not found.")
 
