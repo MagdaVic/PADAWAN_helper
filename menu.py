@@ -14,7 +14,7 @@ def exit_from_chat():
 
 
 COMMANDS = {'use addressbook': addressbook, 'use notebook': notebook,
-            'sort directory': sort, 'exit': exit_from_chat}
+            'sort directory': sort_directory, 'exit': exit_from_chat}
 
 command_completer = WordCompleter(COMMANDS.keys(), ignore_case=True)
 print(Fore.YELLOW + Back.BLUE + ' Glory to  Ukraine! ')
