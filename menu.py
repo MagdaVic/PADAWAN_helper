@@ -1,9 +1,9 @@
 import sys
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from .sort import main as sort_directory
-from .addressbook import main as addressbook
-from .notebook import main as notebook
+from sort import main as sort_directory
+from addressbook import main as addressbook
+from notebook import main as notebook
 from colorama import init
 from colorama import Fore, Back, Style
 init(autoreset=True)
@@ -18,7 +18,7 @@ def main():
                 'sort directory': sort_directory, 'exit': exit_from_chat}
 
     command_completer = WordCompleter(COMMANDS.keys(), ignore_case=True)
-    print(Fore.YELLOW + Back.BLUE + ' Glory to  Ukraine! ')
+    print(Fore.YELLOW + Back.BLUE + 'Glory to  Ukraine!  ')
     print(Fore.BLUE + Back.YELLOW + 'Glory to the Heroes!')
     print('    > Hello! I am your personal PADAWAN helper')
     print("    > How can I help you?")
