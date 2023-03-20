@@ -1,7 +1,9 @@
 import os
 import sys
 import shutil
-
+from colorama import init
+from colorama import Fore, Back
+init()
 
 def list_all_files_in_rootdir(rootdir, lst_all_files):
     for it in os.scandir(rootdir):
@@ -114,9 +116,9 @@ def print_out_in_console(dict_fact_files, dict_known_unknown_extentions):
 def validate_correct_path():
         rootdir = None
         while True:
-            rootdir = input('Enter correct path of directory that you want to sort:').strip()
+            rootdir = input(  '>Enter correct path of directory that you want to sort:').strip()
             if not os.path.exists(rootdir) and rootdir.lower() !='exit':
-                print("Path doesn't exist. Write correct path and directory")
+                print(Fore.WHITE + Back.RED +f"    >Path doesn't exist. Write correct path and directory")
                 print("If you want to exit - enter 'exit'")
             else:
                 break
@@ -136,7 +138,7 @@ def main():
     while True:
         rootdir=validate_correct_path()
         if rootdir.lower() =='exit':
-            print('Exit from sort')
+            print('Exit from Sort')
             break
         lst_all_files = []
         lst_all_files = list_all_files_in_rootdir(rootdir, lst_all_files)
