@@ -230,7 +230,7 @@ class AddressBook(UserDict):
             with open("absave.bin", "rb") as fl:
                 self.data = pickle.load(fl)
                 print("    > Information is loaded.")
-            return self.data
+                return self.data
         except FileNotFoundError:
             print(Fore.WHITE + Back.RED + "  > Save file not found.")
 
@@ -575,7 +575,7 @@ def read_contacts_from_file(output_list, address_book: AddressBook):
 
 def main():
     address_book = AddressBook()
-    address_book.read_from_file()
+    # address_book.read_from_file()
 
     COMMANDS = {'hello': hello,  'add phone': add_name_phone, 'add birthday': add_name_birthday, 'add email': add_name_email, 'add address': add_name_address, 'change phone': change_phone,
                 'change address': change_address, 'change email': change_email, 'change birthday': change_birthday,
