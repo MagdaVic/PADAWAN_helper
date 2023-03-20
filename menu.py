@@ -1,9 +1,9 @@
 import sys
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from .sort import main as sort_directory
-from .addressbook import main as addressbook
-from .notebook import main as notebook
+from sort import main as sort_directory
+from addressbook import main as addressbook
+from notebook import main as notebook
 from colorama import init
 from colorama import Fore, Back, Style
 init(autoreset=True)
